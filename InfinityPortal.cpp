@@ -63,31 +63,8 @@ void InfinityPortal::getTagId() {
 	packet[3] = 0x26;
 	packet[4] = 0x00;
 	packet[5] = 0xdc;
-	packet[6] = 0x02;
-	packet[7] = 0x06;
-	packet[8] = 0xff;
-	packet[9] = 0x00;
-	packet[10] = 0x00;
-	packet[11] = 0xca;
-	packet[12] = 0x36;
-	packet[13] = 0xf1;
-	packet[14] = 0x2c;
-	packet[15] = 0x70;
-	packet[16] = 0x00;
-	packet[17] = 0x00;
-	packet[18] = 0x00;
-	packet[19] = 0x00;
-	packet[20] = 0x36;
-	packet[21] = 0xe7;
-	packet[22] = 0x3c;
-	packet[23] = 0x90;
-	packet[25] = 0x00;
-	packet[26] = 0x00;
-	packet[27] = 0x00;
-	packet[28] = 0x00;
-	packet[29] = 0x00;
-	packet[30] = 0x00;
-	packet[31] = 0x00;
+
+	// XXX Doesn’t supply tag data for anything but single figure, seemingly first one placed on base?
 
 	sendPacket(packet);
 }
@@ -186,30 +163,7 @@ void InfinityPortal::fadeColour(char platform, char r, char g, char b) {
 		checksum += packet[l];
 	}
 
-	checksum = checksum & 0xFF;
-
-	packet[10] = checksum; // checksum
-	packet[11] = 0x00; // unknown and seemingly useless from here on
-	packet[12] = 0x02;
-	packet[13] = 0x2a;
-	packet[14] = 0x32;
-	packet[15] = 0x80;
-	packet[16] = 0x00;
-	packet[17] = 0x00;
-	packet[18] = 0x00;
-	packet[19] = 0x00;
-	packet[20] = 0x36;
-	packet[21] = 0xe7;
-	packet[22] = 0x3c;
-	packet[23] = 0x90;
-	packet[24] = 0x00;
-	packet[25] = 0x00;
-	packet[26] = 0x00;
-	packet[27] = 0x00;
-	packet[28] = 0x00;
-	packet[29] = 0x00;
-	packet[30] = 0x00;
-	packet[31] = 0x00;
+	packet[10] = checksum & 0xFF;
 
 	sendPacket(packet);
 }
@@ -244,32 +198,7 @@ void InfinityPortal::setColour(char platform, char r, char g, char b) {
 		checksum += packet[l];
 	}
 
-	checksum = checksum & 0xFF;
-
-	packet[8] = checksum;
-	packet[9] = 0x00;
-	packet[10] = 0x00;
-	packet[11] = 0x00;
-	packet[12] = 0x36;
-	packet[13] = 0xf1;
-	packet[14] = 0x2c;
-	packet[15] = 0x70;
-	packet[16] = 0x00;
-	packet[17] = 0x00;
-	packet[18] = 0x00;
-	packet[19] = 0x00;
-	packet[20] = 0x36;
-	packet[21] = 0xe7;
-	packet[22] = 0x3c;
-	packet[23] = 0x90;
-	packet[24] = 0x00;
-	packet[25] = 0x00;
-	packet[26] = 0x00;
-	packet[27] = 0x00;
-	packet[28] = 0x00;
-	packet[29] = 0x00;
-	packet[30] = 0x00;
-	packet[31] = 0x00;
+	packet[8] = checksum & 0xFF;
 
 	sendPacket(packet);
 }
@@ -299,27 +228,6 @@ void InfinityPortal::flashColour(char platform, char r, char g, char b) {
 	}
 
 	packet[11] = checksum & 0xff;
-
-	packet[12] = 0x36;
-	packet[13] = 0xf1;
-	packet[14] = 0x2c;
-	packet[15] = 0x70;
-	packet[16] = 0x00;
-	packet[17] = 0x00;
-	packet[18] = 0x00;
-	packet[19] = 0x00;
-	packet[20] = 0x36;
-	packet[21] = 0xe7;
-	packet[22] = 0x3c;
-	packet[23] = 0x90;
-	packet[24] = 0x28;
-	packet[25] = 0x00;
-	packet[26] = 0x00;
-	packet[27] = 0x44;
-	packet[28] = 0x00;
-	packet[29] = 0x00;
-	packet[30] = 0x00;
-	packet[31] = 0x00;
 
 	sendPacket(packet);
 }
