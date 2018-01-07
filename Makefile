@@ -1,8 +1,10 @@
-all:
+all: infinitylightsbin lightshowbin
+
+infinitylightsbin:
 	rm -f infinitylights
 	g++ main.cpp InfinityPortal.cpp SkylandersPortal.cpp -o infinitylights -lusb-1.0
 
-lightshow:
+lightshowbin:
 	rm -f lightshow
 	g++ lightshow.cpp InfinityPortal.cpp SkylandersPortal.cpp -o lightshow -lusb-1.0
 
