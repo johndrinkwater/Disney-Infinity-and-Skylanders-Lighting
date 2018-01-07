@@ -1,12 +1,12 @@
 #include "InfinityPortal.h"
 
 InfinityPortal::InfinityPortal(int deviceId) {
-	
+
 	// printf("Device id: %d\n",deviceId);
 	deviceHandler = connect(deviceId);
-	
+
 	int retVal = 0;
-	
+
 	if (libusb_kernel_driver_active(deviceHandler, 0) == 1) {
 		retVal = libusb_detach_kernel_driver(deviceHandler, 0);
 		if (retVal < 0) {
@@ -30,20 +30,20 @@ InfinityPortal::InfinityPortal() {
 }
 
 libusb_device_handle* InfinityPortal::connect(int deviceId) {
-	
+
 	libusb_device** devices;
 	libusb_context* context;
 	struct libusb_device_handle* tryDeviceHandler;
 
 	libusb_init(&context);
 	int devicesCount = libusb_get_device_list(context, &devices);
-	
+
 	int error;
 
 	struct libusb_device_descriptor descriptor;
-	
+
 	int retVal = libusb_open(devices[deviceId], &tryDeviceHandler);
-	
+
 	libusb_get_device_descriptor(devices[deviceId], &descriptor);
 
 	if(descriptor.idVendor == 0x0e6f && descriptor.idProduct == 0x0129) {
@@ -109,7 +109,7 @@ void InfinityPortal::sendPacket(unsigned char* packet) {
 	// 	printf("Error name: %s\n",libusb_error_name(retVal));
 	// 	exit(1);
 	// }
-	
+
 }
 
 void InfinityPortal::processReceivedPacket(unsigned char* packet) {
@@ -215,7 +215,7 @@ void InfinityPortal::fadeColour(char platform, char r, char g, char b) {
 }
 
 InfinityPortal::~InfinityPortal() {
-	
+
 }
 
 void InfinityPortal::activate() {
