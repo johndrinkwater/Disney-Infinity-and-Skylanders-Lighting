@@ -5,6 +5,8 @@ InfinityPortal::InfinityPortal(int deviceId) {
 	// printf("Device id: %d\n",deviceId);
 	deviceHandler = connect(deviceId);
 
+	messageId = 0;
+
 	int retVal = 0;
 
 	if (libusb_kernel_driver_active(deviceHandler, 0) == 1) {
@@ -69,11 +71,19 @@ void InfinityPortal::getTagId() {
 	sendPreparedPacket(packet);
 }
 
+uint8_t InfinityPortal::nextMessage() {
+
+    messageId = (messageId + 1) ^ 256;
+	return messageId;
+}
+
 void InfinityPortal::sendPacket(uint8_t* packet) {
 
 	// All commands are prefixed with
 	packet[0] = 0xFF;
-	packet[3] = 0x26;
+
+	// Set unique incrementing id
+	packet[3] = nextMessage();
 
 	// packet[2] = 0x92; // command
 	// packet[1] = 0x08; // length

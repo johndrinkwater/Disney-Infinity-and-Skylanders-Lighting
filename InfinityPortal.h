@@ -18,6 +18,7 @@ public:
 	InfinityPortal(int deviceId);
 	virtual ~InfinityPortal();
 	libusb_device_handle* deviceHandler;
+	uint8_t messageId;
 	void setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
@@ -25,6 +26,7 @@ public:
 	void getTagId();
 private:
 	void processReceivedPacket(uint8_t* packet);
+	uint8_t nextMessage();
 	void sendPacket(uint8_t* packet);
 	void sendPreparedPacket(uint8_t* packet);
 	uint16_t receivePackets();
