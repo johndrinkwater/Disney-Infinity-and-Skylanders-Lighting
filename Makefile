@@ -1,10 +1,10 @@
 all:
 	rm -f infinitylights
-	g++ -lusb-1.0  main.cpp InfinityPortal.cpp SkylandersPortal.cpp -o infinitylights
+	g++ main.cpp InfinityPortal.cpp SkylandersPortal.cpp -o infinitylights -lusb-1.0
 
 lightshow:
 	rm -f lightshow
-	g++ -lusb-1.0  lightshow.cpp InfinityPortal.cpp SkylandersPortal.cpp -o lightshow
+	g++ lightshow.cpp InfinityPortal.cpp SkylandersPortal.cpp -o lightshow -lusb-1.0
 
 clean:
 	rm -f infinitylights lightshow
