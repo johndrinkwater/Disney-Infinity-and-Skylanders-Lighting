@@ -55,7 +55,7 @@ libusb_device_handle* InfinityPortal::connect(int deviceId) {
 void InfinityPortal::getTagId() {
 
 	// ff 03 b4 26 00 dc 02 06 ff 00 00 ca 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
-	unsigned char* packet = new unsigned char[32];
+	uint8_t* packet = new uint8_t[32];
 
 	packet[0] = 0xff;
 	packet[1] = 0x03;
@@ -69,7 +69,7 @@ void InfinityPortal::getTagId() {
 	sendPreparedPacket(packet);
 }
 
-void InfinityPortal::sendPacket(unsigned char* packet) {
+void InfinityPortal::sendPacket(uint8_t* packet) {
 
 	// All commands are prefixed with
 	packet[0] = 0xFF;
@@ -89,7 +89,7 @@ void InfinityPortal::sendPacket(unsigned char* packet) {
 	sendPreparedPacket( packet );
 }
 
-void InfinityPortal::sendPreparedPacket(unsigned char* packet) {
+void InfinityPortal::sendPreparedPacket(uint8_t* packet) {
 
 	int len;
 	int retVal = -1;
@@ -109,7 +109,7 @@ void InfinityPortal::sendPreparedPacket(unsigned char* packet) {
 
 }
 
-void InfinityPortal::processReceivedPacket(unsigned char* packet) {
+void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 
 	if(packet[0x00] == 0xab) {
 		// printf("Something was placed somewhere!\n");
@@ -121,8 +121,8 @@ void InfinityPortal::processReceivedPacket(unsigned char* packet) {
 		// }
 		// printf("\n");
 
-		char platformSetting = packet[2];
-		char placedRemoved = packet[5];
+		uint8_t platformSetting = packet[2];
+		uint8_t placedRemoved = packet[5];
 
 		if(placedRemoved == 0x00) {
 			printf("Tag placed on platform: %d\n",platformSetting);
@@ -144,12 +144,12 @@ void InfinityPortal::processReceivedPacket(unsigned char* packet) {
 
 }
 
-int InfinityPortal::receivePackets() {
+uint16_t InfinityPortal::receivePackets() {
 
-	int packetsReceived;
+	uint16_t packetsReceived;
 	int retVal = 0;
 	int len = 0;
-	unsigned char* packet = new unsigned char[32];
+	uint8_t* packet = new uint8_t[32];
 
 	while(retVal == 0) {
 
@@ -163,8 +163,8 @@ int InfinityPortal::receivePackets() {
 	return packetsReceived;
 }
 
-void InfinityPortal::fadeColour(char platform, char r, char g, char b) {
-	unsigned char* packet = new unsigned char[32];
+void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
+	uint8_t* packet = new uint8_t[32];
 
 	packet[0] = 0xFF; // header 1
 	packet[1] = 0x08; // header 2
@@ -193,15 +193,15 @@ InfinityPortal::~InfinityPortal() {
 }
 
 void InfinityPortal::activate() {
-	unsigned char packet[] = {0xff,0x11,0x80,0x00,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33,0xb6,0x30,0x6f,0xcb,0x40,0x30,0x6a,0x44,0x20,0x30,0x5c,0x6f,0x00};
+	uint8_t packet[] = {0xff,0x11,0x80,0x00,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33,0xb6,0x30,0x6f,0xcb,0x40,0x30,0x6a,0x44,0x20,0x30,0x5c,0x6f,0x00};
 	sendPreparedPacket(packet);
 }
 
-void InfinityPortal::setColour(char platform, char r, char g, char b) {
+void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	// ff 06 90 41 02 00 00 00 d8 00 00 00 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
 
-	unsigned char* packet = new unsigned char[32];
+	uint8_t* packet = new uint8_t[32];
 
 	packet[0] = 0xff;
 	packet[1] = 0x06; // packet length
@@ -223,11 +223,11 @@ void InfinityPortal::setColour(char platform, char r, char g, char b) {
 	sendPreparedPacket(packet);
 }
 
-void InfinityPortal::flashColour(char platform, char r, char g, char b) {
+void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	// ff 09 93 07 02 02 02 06 ff 00 00 ad 36 f1 2c 70 00 00 00 00 36 e7 3c 90 28 00 00 44 00 00 00 00
 
-	unsigned char* packet = new unsigned char[32];
+	uint8_t* packet = new uint8_t[32];
 
 	packet[0] = 0xFF;
 	packet[1] = 0x09; // packet length after this
