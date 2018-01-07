@@ -26,6 +26,7 @@ public:
 private:
 	void processReceivedPacket(unsigned char* packet);
 	void sendPacket(unsigned char* packet);
+	void sendPreparedPacket(unsigned char* packet);
 	int receivePackets();
 	libusb_device_handle* connect(int deviceId);
 };
