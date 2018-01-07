@@ -6,6 +6,11 @@ InfinityPortal::InfinityPortal(int deviceId) {
 	deviceHandler = connect(deviceId);
 
 	messageId = 0;
+	messageReply = new uint8_t[256];
+	memset( messageReply, 0, sizeof( messageReply ) );
+	// we pre-populate entry 00, as the portal sends a packet with that msgid on first open
+	// XXX picked 0xef randomally.. if this clashes with a known command later, change it
+	messageReply[ 00 ] = 0xef;
 
 	int retVal = 0;
 
@@ -84,6 +89,9 @@ void InfinityPortal::sendPacket(uint8_t* packet) {
 
 	// Set unique incrementing id
 	packet[3] = nextMessage();
+
+	// Store command to direct reply to
+	messageReply[ packet[3] ] = packet[2];
 
 	// packet[2] = 0x92; // command
 	// packet[1] = 0x08; // length

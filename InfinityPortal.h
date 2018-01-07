@@ -19,6 +19,7 @@ public:
 	virtual ~InfinityPortal();
 	libusb_device_handle* deviceHandler;
 	uint8_t messageId;
+	uint8_t *messageReply;
 	void setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
