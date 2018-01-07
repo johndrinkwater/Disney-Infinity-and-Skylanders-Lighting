@@ -63,17 +63,14 @@ void InfinityPortal::getTagId() {
 
 	// ff 03 b4 26 00 dc 02 06 ff 00 00 ca 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
 	uint8_t* packet = new uint8_t[32];
+	memset( packet, 0, sizeof( packet ) );
 
-	packet[0] = 0xff;
-	packet[1] = 0x03;
-	packet[2] = 0xb4;
-	packet[3] = 0x26;
+	packet[1] = 0x03; // length
+	packet[2] = 0xb4; // command
 	packet[4] = 0x00;
-	packet[5] = 0xdc;
 
 	// XXX Doesn’t supply tag data for anything but single figure, seemingly first one placed on base?
-
-	sendPreparedPacket(packet);
+	sendPacket(packet);
 }
 
 uint8_t InfinityPortal::nextMessage() {
@@ -183,12 +180,12 @@ uint16_t InfinityPortal::receivePackets() {
 
 void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 	uint8_t* packet = new uint8_t[32];
+	memset( packet, 0, sizeof( packet ) );
 
-	packet[0] = 0xFF; // header 1
-	packet[1] = 0x08; // header 2
-	packet[2] = 0x92; // header 3
-	packet[3] = 0x0a; // inc
-	packet[4] = platform; // panel
+	packet[1] = 0x08; // length
+	packet[2] = 0x92; // command
+
+	packet[4] = platform;
 	packet[5] = 0x10; // unknown
 	packet[6] = 0x02; // unknown
 
@@ -196,14 +193,7 @@ void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t 
 	packet[8] = g;
 	packet[9] = b;
 
-	int checksum = 0;
-	for(int l = 0 ; l < 10 ; l++) {
-		checksum += packet[l];
-	}
-
-	packet[10] = checksum & 0xFF;
-
-	sendPreparedPacket(packet);
+	sendPacket(packet);
 }
 
 InfinityPortal::~InfinityPortal() {
@@ -218,55 +208,37 @@ void InfinityPortal::activate() {
 void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	// ff 06 90 41 02 00 00 00 d8 00 00 00 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
-
 	uint8_t* packet = new uint8_t[32];
+	memset( packet, 0, sizeof( packet ) );
 
-	packet[0] = 0xff;
-	packet[1] = 0x06; // packet length
-	packet[2] = 0x90; // weird packet length
-	packet[3] = 0x41;
-	packet[4] = platform; // platform
-	packet[5] = r; // r
-	packet[6] = g; // g
-	packet[7] = b; // b
-	// packet[8] = 0xd8;
+	packet[1] = 0x06; // length
+	packet[2] = 0x90; // command
 
-	int checksum = 0;
-	for(int l = 0 ; l < 8 ; l++) {
-		checksum += packet[l];
-	}
+	packet[4] = platform;
+	packet[5] = r;
+	packet[6] = g;
+	packet[7] = b;
 
-	packet[8] = checksum & 0xFF;
-
-	sendPreparedPacket(packet);
+	sendPacket(packet);
 }
 
 void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	// ff 09 93 07 02 02 02 06 ff 00 00 ad 36 f1 2c 70 00 00 00 00 36 e7 3c 90 28 00 00 44 00 00 00 00
-
 	uint8_t* packet = new uint8_t[32];
+	memset( packet, 0, sizeof( packet ) );
 
-	packet[0] = 0xFF;
-	packet[1] = 0x09; // packet length after this
-	packet[2] = 0x93;
-	packet[3] = 0x07;
+	packet[1] = 0x09; // length
+	packet[2] = 0x93; // command
+
 	packet[4] = platform;
 	packet[5] = 0x02;
 	packet[6] = 0x02;
 	packet[7] = 0x06;
-	packet[8] = r; // r
-	packet[9] = g; // g
-	packet[10] = b; // b
+	packet[8] = r;
+	packet[9] = g;
+	packet[10] = b;
 
-	int checksum = 0;
-
-	for(int l = 0 ; l < 11 ; l++) {
-		checksum += packet[l];
-	}
-
-	packet[11] = checksum & 0xff;
-
-	sendPreparedPacket(packet);
+	sendPacket(packet);
 }
 
