@@ -6,8 +6,7 @@ InfinityPortal::InfinityPortal(int deviceId) {
 	deviceHandler = connect(deviceId);
 
 	messageId = 0;
-	messageReply = new uint8_t[256];
-	memset( messageReply, 0, sizeof( messageReply ) );
+	messageReply = new uint8_t[256]();
 	// we pre-populate entry 00, as the portal sends a packet with that msgid on first open
 	// XXX picked 0xef randomally.. if this clashes with a known command later, change it
 	messageReply[ 00 ] = 0xef;
@@ -179,8 +178,7 @@ uint16_t InfinityPortal::receivePackets() {
 }
 
 void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
-	uint8_t* packet = new uint8_t[32];
-	memset( packet, 0, sizeof( packet ) );
+	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x08; // length
 	packet[2] = 0x92; // command
@@ -207,9 +205,7 @@ void InfinityPortal::activate() {
 
 void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
-	// ff 06 90 41 02 00 00 00 d8 00 00 00 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
-	uint8_t* packet = new uint8_t[32];
-	memset( packet, 0, sizeof( packet ) );
+	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x06; // length
 	packet[2] = 0x90; // command
@@ -224,9 +220,7 @@ void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b
 
 void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
-	// ff 09 93 07 02 02 02 06 ff 00 00 ad 36 f1 2c 70 00 00 00 00 36 e7 3c 90 28 00 00 44 00 00 00 00
-	uint8_t* packet = new uint8_t[32];
-	memset( packet, 0, sizeof( packet ) );
+	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x09; // length
 	packet[2] = 0x93; // command
