@@ -22,7 +22,7 @@ InfinityPortal::InfinityPortal(int deviceId) {
 
 	retVal = libusb_claim_interface(deviceHandler, 0);
 
-	if(retVal != 0) {
+	if (retVal != 0) {
 		printf("Error code: %d\n",retVal);
 		printf("Error name: %s\n",libusb_error_name(retVal));
 		exit(1);
@@ -52,23 +52,36 @@ libusb_device_handle* InfinityPortal::connect(int deviceId) {
 
 	libusb_get_device_descriptor(devices[deviceId], &descriptor);
 
-	if(descriptor.idVendor == 0x0e6f && descriptor.idProduct == 0x0129) {
+	if (descriptor.idVendor == 0x0e6f && descriptor.idProduct == 0x0129) {
 
 		return tryDeviceHandler;
 	}
 }
 
-void InfinityPortal::getTagId() {
+void InfinityPortal::listDiscs() {
 
-	// ff 03 b4 26 00 dc 02 06 ff 00 00 ca 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
-	uint8_t* packet = new uint8_t[32];
-	memset( packet, 0, sizeof( packet ) );
+	uint8_t* packet = new uint8_t[32]();
+
+	packet[1] = 0x02; // length
+	packet[2] = 0xa1; // command
+
+	sendPacket(packet);
+}
+
+void InfinityPortal::getDiscId(uint8_t disc) {
+
+	// As discs are placed on the base, we receive a message to say which platform, and what № they are
+	// this disc number is assigned by the base, picking the first unused number upwards from 0
+	// with 2 figures, 2 power discs, a skydome and playset, it should count 0,1,2,3,4,5
+	// As discs are removed, holes appear in the numbering and it will reuse them
+	// Have been able to stably get up to 8 (meaning 9 discs) at once
+	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x03; // length
 	packet[2] = 0xb4; // command
-	packet[4] = 0x00;
 
-	// XXX Doesn’t supply tag data for anything but single figure, seemingly first one placed on base?
+	packet[4] = disc;
+
 	sendPacket(packet);
 }
 
@@ -115,7 +128,7 @@ void InfinityPortal::sendPreparedPacket(uint8_t* packet) {
 		receivePackets();
 	}
 
-	// if(retVal != 0) {
+	// if (retVal != 0) {
 	// 	printf("Error code: %d\n",retVal);
 	// 	printf("Error name: %s\n",libusb_error_name(retVal));
 	// 	exit(1);
@@ -125,37 +138,103 @@ void InfinityPortal::sendPreparedPacket(uint8_t* packet) {
 
 void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 
-	if(packet[0x00] == 0xab) {
-		// printf("Something was placed somewhere!\n");
+	bool printUnknown = false;
 
-		// printf("Received: ");
+/*	printf("DBG  ");
+	if (packet[0x00] == 0xaa) {
+		printf("%02X ", messageReply[ packet[ 0x02 ] ] );
+	}
+	for(int i = 0 ; i < 32 ; i++) {
+		printf("%02X ",packet[i]);
+	}
+	printf("\n");*/
 
-		// for(int i = 0 ; i < 32 ; i++) {
-		// 	printf("%x ",packet[i]);
-		// }
-		// printf("\n");
+	// Packet:
+	// [0]	Reply type:  0xAB = disc moved, 0xAA = reply to query
+	// [1]  packet size
+	// [2]  msgid     (0xAA and 0xAB queries differ here, as 0xAB lacks this detail)
+	// [3]  data
+	// [size] checksum
+
+	if (packet[0x00] == 0xab) {
 
 		uint8_t platformSetting = packet[2];
+		// TODO discover what packet 3 means, typically set to 0x09
+		// if it is like the reply to disc listing, it just means padding?
+		uint8_t discRef = packet[4];
 		uint8_t placedRemoved = packet[5];
 
-		if(placedRemoved == 0x00) {
+		if (placedRemoved == 0x00) {
 			printf("Tag placed on platform: %d\n",platformSetting);
 		} else {
 			printf("Tag removed from platform: %d\n",platformSetting);
 		}
+		printf("PLAT %02X DISC %02X UNK %02X\n", platformSetting, discRef, packet[3] );
 
-		getTagId();
+		if (placedRemoved == 0x00) {
+			getDiscId( discRef );
+		}
 
-	} else if(packet[0x00] == 0xaa && packet[0x01] == 0x09) {
-		printf("Got tag info\n");
+	} else if (packet[0x00] == 0xaa) {
 
-		// make print tag info!!!
-		for(int i = 10 ; i > 2 ; i--) {
-			printf("%x ",packet[i]);
+		// match packet msgid to our queue to discover what we asked for
+		uint8_t msgId = packet[ 0x02 ];
+		uint8_t msgType = messageReply[ msgId ];
+
+		if ( msgType == 0xef ) {
+
+			printf("BOOT \n");
+			printUnknown = true;
+		} else if ( msgType == 0xa1 ) {
+
+			printf("DISC LS ");
+			for(int i = 0 ; i < 32 ; i++) {
+				printf("%02X ",packet[i]);
+			}
+			printf("\n{ ");
+			for(int i = 3 ; i < packet[1]+2 ; i++) {
+				// XXX (byte & 0xF0) >> 4,	byte & 0x0F
+				if (packet[i] && packet[i]  != 0x09 ) {
+					printf( "%d,%d ", (packet[i] & 0xF0) >> 4, packet[i] & 0x0F );
+				}
+			}
+			printf("} \n");
+		} else if ( msgType == 0xb4 ) {
+
+			if ( packet[ 0x03 ] != 0x80 ) {
+				printf("GOT TAG ");
+				for(int i = 4 ; i < 11 ; i++) {
+					printf("%02X",packet[i]);
+					if (i != 10)
+						printf(":");
+				}
+				printf("\n");
+			} else {
+				// You can request disc information from a location that has no disc, so…
+				printf("NO  TAG\n");
+			}
+		} else if ( msgType == 0x90 ) {
+			printf("COL SET \n");
+		} else if ( msgType == 0x92 ) {
+			printf("COL FADE \n");
+		} else if ( msgType == 0x93 ) {
+			printf("COL FLASH \n");
+		} else {
+			printUnknown = true;
+		}
+		messageReply[ msgId ] = 0;
+
+	} else {
+		printUnknown = true;
+	}
+
+	if (printUnknown) {
+		printf("UNKNOWN ");
+		for(int i = 0 ; i < 32 ; i++) {
+			printf("%02X ",packet[i]);
 		}
 		printf("\n");
 	}
-
 }
 
 uint16_t InfinityPortal::receivePackets() {
@@ -168,7 +247,7 @@ uint16_t InfinityPortal::receivePackets() {
 	while(retVal == 0) {
 
 		retVal = libusb_bulk_transfer(deviceHandler,0x81,packet,32,&len,10);
-		if(retVal == 0) {
+		if (retVal == 0) {
 			processReceivedPacket(packet);
 			packetsReceived += 1;
 		}

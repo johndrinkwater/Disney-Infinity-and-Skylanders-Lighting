@@ -24,7 +24,8 @@ public:
 	void flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void activate();
-	void getTagId();
+	void getDiscId(uint8_t disc);
+	void listDiscs();
 private:
 	void processReceivedPacket(uint8_t* packet);
 	uint8_t nextMessage();
