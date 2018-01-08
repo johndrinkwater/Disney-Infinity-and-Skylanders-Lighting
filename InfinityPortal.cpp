@@ -345,7 +345,7 @@ void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t
 	sendPacket(packet);
 }
 
-void InfinityPortal::flashRandomColours(uint8_t platform) {
+void InfinityPortal::fadeRandomColours(uint8_t platform, uint8_t pulseDuration, uint8_t iterations) {
 
 	uint8_t* packet = new uint8_t[32];
 	memset( packet, 0, sizeof( packet ) );
@@ -354,8 +354,8 @@ void InfinityPortal::flashRandomColours(uint8_t platform) {
 	packet[2] = 0x94; // command
 
 	packet[4] = platform;
-	packet[5] = 0x10; // unknown
-	packet[6] = 0x02; // unknown
+	packet[5] = pulseDuration;	// for one full pulse, 16 (0x10) = 1s, 8 (0x08) = .5, up to 256 (0xFF) = 16s
+	packet[6] = iterations;		// 1 = half (fade to dst colour), 2 = full (fade to dst and back to srs), 3 = full + half
 
 	sendPacket(packet);
 }
