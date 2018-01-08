@@ -15,6 +15,7 @@ InfinityPortal::InfinityPortal(int deviceId) {
 
 	messageId = 0;
 	messageReply = new uint8_t[256]();
+	deviceSerial = new char[14]();
 
 	int retVal = 0;
 
@@ -166,6 +167,8 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 	// [3]  data
 	// [size] checksum
 
+	uint8_t messageLength = packet[1];
+
 	if (packet[0x00] == 0xab) {
 
 		uint8_t platformSetting = packet[2];
@@ -194,7 +197,7 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 		if ( msgType == 0x80 ) {
 
 			printf("BOOT \n");
-			printUnknown = true;
+			snprintf(deviceSerial, 13, "%02X%02X%02X%02X%02X%02X",packet[19], packet[20], packet[21], packet[22], packet[15], packet[16]);
 		} else if ( msgType == 0xa1 ) {
 
 			printf("DISC LS ");
@@ -240,7 +243,7 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 
 	if (printUnknown) {
 		printf("UNKNOWN ");
-		for(int i = 0 ; i < 32 ; i++) {
+		for(int i = 0 ; i < messageLength+3; i++) {
 			printf("%02X ",packet[i]);
 		}
 		printf("\n");
