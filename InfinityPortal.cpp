@@ -1,5 +1,13 @@
 #include "InfinityPortal.h"
 
+InfinityPortal::InfinityPortal() {
+
+}
+
+InfinityPortal::~InfinityPortal() {
+
+}
+
 InfinityPortal::InfinityPortal(int deviceId) {
 
 	// printf("Device id: %d\n",deviceId);
@@ -31,10 +39,6 @@ InfinityPortal::InfinityPortal(int deviceId) {
 	activate();
 }
 
-InfinityPortal::InfinityPortal() {
-
-}
-
 libusb_device_handle* InfinityPortal::connect(int deviceId) {
 
 	libusb_device** devices;
@@ -56,6 +60,12 @@ libusb_device_handle* InfinityPortal::connect(int deviceId) {
 
 		return tryDeviceHandler;
 	}
+}
+
+void InfinityPortal::activate() {
+
+	uint8_t packet[] = {0xff,0x11,0x80,0x00,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33,0xb6,0x30,0x6f,0xcb,0x40,0x30,0x6a,0x44,0x20,0x30,0x5c,0x6f,0x00};
+	sendPreparedPacket(packet);
 }
 
 void InfinityPortal::listDiscs() {
@@ -273,14 +283,6 @@ void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t 
 	sendPacket(packet);
 }
 
-InfinityPortal::~InfinityPortal() {
-
-}
-
-void InfinityPortal::activate() {
-	uint8_t packet[] = {0xff,0x11,0x80,0x00,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33,0xb6,0x30,0x6f,0xcb,0x40,0x30,0x6a,0x44,0x20,0x30,0x5c,0x6f,0x00};
-	sendPreparedPacket(packet);
-}
 
 void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
