@@ -24,6 +24,7 @@ public:
 	void setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void whatColour(uint8_t platform);
 	void flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
+	void flashRandomColours(uint8_t platform);
 	void fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void activate();
 	void getDiscId(uint8_t disc);

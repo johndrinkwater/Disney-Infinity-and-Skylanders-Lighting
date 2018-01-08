@@ -227,11 +227,20 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 				printf("NO  TAG\n");
 			}
 		} else if ( msgType == 0x90 ) {
-			printf("COL SET \n");
+			// printf("COL SET \n");
+		} else if ( msgType == 0x91 ) {
+			printf("COL REQ ");
+			for(int i = 3 ; i < messageLength+2 ; i++) {
+				printf( "%02X ", packet[i] );
+			}
+			printf("\n");
 		} else if ( msgType == 0x92 ) {
 			printf("COL FADE \n");
 		} else if ( msgType == 0x93 ) {
 			printf("COL FLASH \n");
+		} else if ( msgType == 0x94 ) {
+			printf("COL ??? \n");
+			printUnknown = true;
 		} else {
 			printUnknown = true;
 		}
@@ -332,6 +341,21 @@ void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t
 	packet[8] = r;
 	packet[9] = g;
 	packet[10] = b;
+
+	sendPacket(packet);
+}
+
+void InfinityPortal::flashRandomColours(uint8_t platform) {
+
+	uint8_t* packet = new uint8_t[32];
+	memset( packet, 0, sizeof( packet ) );
+
+	packet[1] = 0x05; // length
+	packet[2] = 0x94; // command
+
+	packet[4] = platform;
+	packet[5] = 0x10; // unknown
+	packet[6] = 0x02; // unknown
 
 	sendPacket(packet);
 }
