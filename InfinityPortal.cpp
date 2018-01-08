@@ -15,9 +15,6 @@ InfinityPortal::InfinityPortal(int deviceId) {
 
 	messageId = 0;
 	messageReply = new uint8_t[256]();
-	// we pre-populate entry 00, as the portal sends a packet with that msgid on first open
-	// XXX picked 0xef randomally.. if this clashes with a known command later, change it
-	messageReply[ 00 ] = 0xef;
 
 	int retVal = 0;
 
@@ -64,8 +61,11 @@ libusb_device_handle* InfinityPortal::connect(int deviceId) {
 
 void InfinityPortal::activate() {
 
-	uint8_t packet[] = {0xff,0x11,0x80,0x00,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33,0xb6,0x30,0x6f,0xcb,0x40,0x30,0x6a,0x44,0x20,0x30,0x5c,0x6f,0x00};
-	sendPreparedPacket(packet);
+	uint8_t packet[] = {0,0,0,0,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33};
+	packet[1] = 0x11; // length
+	packet[2] = 0x80; // command
+
+	sendPacket(packet);
 }
 
 void InfinityPortal::listDiscs() {
@@ -191,7 +191,7 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 		uint8_t msgId = packet[ 0x02 ];
 		uint8_t msgType = messageReply[ msgId ];
 
-		if ( msgType == 0xef ) {
+		if ( msgType == 0x80 ) {
 
 			printf("BOOT \n");
 			printUnknown = true;
