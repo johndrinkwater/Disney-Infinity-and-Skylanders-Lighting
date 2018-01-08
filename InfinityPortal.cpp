@@ -286,7 +286,6 @@ void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t 
 	sendPacket(packet);
 }
 
-
 void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	uint8_t* packet = new uint8_t[32]();
@@ -298,6 +297,23 @@ void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b
 	packet[5] = r;
 	packet[6] = g;
 	packet[7] = b;
+
+	sendPacket(packet);
+}
+
+void InfinityPortal::whatColour(uint8_t platform) {
+
+	uint8_t* packet = new uint8_t[32]();
+
+	packet[1] = 0x03; // length
+	packet[2] = 0x91; // command
+	// XXX This appears to be off by one, likely not wanting to answer for all platforms (it should + could with space it has)
+	// XXX 0 returns 1, 1 returns 2, 2 returns 3. There appears to be no way to query the status of ALL platforms
+	// XXX 4+ return an empty packet
+	// XXX this hack is so we can be consistent with using 1 = playset platform, 2 etc.
+	if (platform >= 1)
+		platform -= 1;
+	packet[4] = platform;
 
 	sendPacket(packet);
 }

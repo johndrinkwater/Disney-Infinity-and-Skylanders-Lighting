@@ -22,6 +22,7 @@ public:
 	uint8_t messageId;
 	uint8_t *messageReply;
 	void setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
+	void whatColour(uint8_t platform);
 	void flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
 	void activate();
