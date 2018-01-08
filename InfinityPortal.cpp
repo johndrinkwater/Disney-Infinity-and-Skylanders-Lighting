@@ -269,22 +269,6 @@ uint16_t InfinityPortal::receivePackets() {
 	return packetsReceived;
 }
 
-void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
-	uint8_t* packet = new uint8_t[32]();
-
-	packet[1] = 0x08; // length
-	packet[2] = 0x92; // command
-
-	packet[4] = platform;
-	packet[5] = 0x10; // unknown
-	packet[6] = 0x02; // unknown
-
-	packet[7] = r;
-	packet[8] = g;
-	packet[9] = b;
-
-	sendPacket(packet);
-}
 
 void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
@@ -314,6 +298,22 @@ void InfinityPortal::whatColour(uint8_t platform) {
 	if (platform >= 1)
 		platform -= 1;
 	packet[4] = platform;
+
+	sendPacket(packet);
+}
+
+void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
+	uint8_t* packet = new uint8_t[32]();
+
+	packet[1] = 0x08; // length
+	packet[2] = 0x92; // command
+
+	packet[4] = platform;
+	packet[5] = 0x10; // unknown
+	packet[6] = 0x02; // unknown
+	packet[7] = r;
+	packet[8] = g;
+	packet[9] = b;
 
 	sendPacket(packet);
 }
