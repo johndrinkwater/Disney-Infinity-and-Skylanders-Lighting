@@ -178,9 +178,9 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 		uint8_t placedRemoved = packet[5];
 
 		if (placedRemoved == 0x00) {
-			printf("Tag placed on platform: %d\n",platformSetting);
+			printf("TAG ADD ");
 		} else {
-			printf("Tag removed from platform: %d\n",platformSetting);
+			printf("TAG REM ");
 		}
 		printf("PLAT %02X DISC %02X UNK %02X\n", platformSetting, discRef, packet[3] );
 
@@ -235,12 +235,11 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 			}
 			printf("\n");
 		} else if ( msgType == 0x92 ) {
-			printf("COL FADE \n");
+			//printf("COL FADE \n");
 		} else if ( msgType == 0x93 ) {
-			printf("COL FLASH \n");
+			//printf("COL FLASH \n");
 		} else if ( msgType == 0x94 ) {
-			printf("COL ??? \n");
-			printUnknown = true;
+			//printf("COL RAND \n");
 		} else {
 			printUnknown = true;
 		}
