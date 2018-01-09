@@ -311,15 +311,24 @@ void InfinityPortal::whatColour(uint8_t platform) {
 	sendPacket(packet);
 }
 
+
 void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
+
+	sineWave(platform, 0x10, 0x02, r, g, b);
+}
+
+void InfinityPortal::sineWave(uint8_t platform, uint8_t animationDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b) {
 	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x08; // length
 	packet[2] = 0x92; // command
 
 	packet[4] = platform;
-	packet[5] = 0x10; // unknown
-	packet[6] = 0x02; // unknown
+	// XXX To best describe this, it is an absolute sine wave, with animationDuration being Pi (width of half a period in time)
+	// XXX https://upload.wikimedia.org/wikipedia/commons/4/42/Simple_full-wave_rectified_sine.svg
+	// XXX iterations is a bit more confusing, with 1: being the rise to Pi/2, 2: the fall to 0 = Pi, 3: Pi + Pi/2, 4: 2Pi, or two full pulses
+	packet[5] = animationDuration;	// 16 (0x10) = 1s, 8 (0x08) = .5, up to 256 (0xFF) = 16s
+	packet[6] = iterations;			// 1 = half (fade to dst colour), 2 = full (fade to dst and back to srs), 3 = full + half
 	packet[7] = r;
 	packet[8] = g;
 	packet[9] = b;
@@ -329,15 +338,20 @@ void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t 
 
 void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
+	pulseWave(platform, 0x02, 0x02, 0x06, r, g, b);
+}
+
+void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t troughDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b) {
+
 	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x09; // length
 	packet[2] = 0x93; // command
 
 	packet[4] = platform;
-	packet[5] = 0x02;
-	packet[6] = 0x02;
-	packet[7] = 0x06;
+	packet[5] = crestDuration;		// duration for on time
+	packet[6] = troughDuration;		// duration for off time
+	packet[7] = iterations;			// iterations, 1 = half (flash on), 2 = full (flash on/off), 3 = full + half
 	packet[8] = r;
 	packet[9] = g;
 	packet[10] = b;
