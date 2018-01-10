@@ -1,0 +1,87 @@
+// This was from running a fuzzer (a loop of loops of sending data) over a
+// narrow range of 80-8f - c0-cf to discover yet-unknown command endpoints,
+// from there we need to discover what to push into those commands to get
+// useful output / discover their purpose
+//
+// X Command DataLength
+// DBG = reply, so that was good!
+
+X 80 17
+DBG  80 AA 15 15 00 00 01 00 03 02 09 09 43 15 51 60 34 33 54 42 48 E7 50 91 02
+
+X 81 10
+DBG  81 AA 01 0E B9
+
+X 83 02
+DBG  83 AA 09 42 45 11 81 14 90 51 80 10 51
+
+X 84 02
+DBG  84 AA 01 60 0B
+
+X 85 02
+DBG  85 AA 02 7E FF 29
+
+
+
+X 90 06
+DBG  90 AA 01 0A B5
+
+X 91 03
+DBG  91 AA 01 25 D0
+
+X 92 08
+DBG  92 AA 01 48 F3
+
+X 93 09
+DBG  93 AA 01 67 12
+
+X 94 05
+DBG  94 AA 01 81 2C
+
+X 95 14
+DBG  95 AA 01 12 BD
+
+X 96 20
+DBG  96 AA 01 36 E1
+
+X 97 23
+DBG  97 AA 01 57 02
+
+
+
+X A1 02
+DBG  A1 AA 05 25 30 09 21 09 37
+
+X A2 05
+DBG  A2 AA 12 46 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 82
+
+X A3 21
+DBG  A3 AA 02 74 80 A0
+
+X A4 05
+DBG  A4 AA 06 82 80 00 00 00 00 B2
+
+X A5 09
+DBG  A5 AA 02 A4 80 D0
+
+X A6 09
+DBG  A6 AA 02 C2 80 EE
+
+X A7 10
+DBG  A7 AA 02 E0 86 12
+
+
+
+X B1 04
+DBG  B1 AA 02 26 80 52
+
+X B4 03
+DBG  B4 AA 09 7F 80 00 00 00 00 00 00 00 B2
+
+X B5 03
+DBG  B5 AA 01 9D 48
+
+X B6 06
+DBG  B6 AA 02 BE 80 EA
+
+…

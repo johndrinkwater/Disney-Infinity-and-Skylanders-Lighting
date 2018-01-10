@@ -1,0 +1,42 @@
+
+// These packets give us nothing, because they only contain 0xff, msgln, cmd, msgid, crc
+ff 02 83 00 84
+ff 02 a1 04 a6
+
+// Similarly, b4 is known (GETDISC) so this is just requesting the tag of the active disc in that position
+ff 03 b4 05 00 bb
+ff 03 b4 cb 01 82
+
+
+ff 03 b5 01 ff b7
+ff 03 b5 02 01 ba
+ff 03 b5 04 01 bc
+ff 05 a2 27 00 00 01 ce
+ff 05 a2 28 00 01 00 cf
+ff 05 a2 29 00 02 00 d1
+ff 05 a2 2a 00 00 02 d2
+ff 05 a2 2b 00 03 00 d4
+ff 05 a2 2c 00 03 01 d6
+ff 05 a2 2d 00 01 01 d5
+ff 05 a2 2e 00 02 01 d7
+ff 05 a2 cc 01 00 01 74
+ff 05 a2 cd 01 01 00 75
+ff 05 a2 ce 01 02 00 77
+ff 05 a2 d1 01 00 02 7a
+ff 05 a2 d2 01 03 00 7c
+ff 05 a2 d3 01 03 01 7e
+ff 05 a2 d4 01 01 01 7d
+ff 05 a2 d5 01 02 01 7f
+ff 06 90 06 02 00 00 00 9d
+ff 08 92 08 02 24 02 ff 00 00 c8
+ff 08 92 01 02 24 02 ff 5a 00 1b
+ff 08 92 02 02 51 01 00 00 00 ef
+ff 08 92 02 02 51 01 fc bd 7e 26
+ff 09 93 24 02 02 02 06 ff 00 00 ca
+ff 0a 81 03 85 f2 32 83 c3 86 2c 46 74
+ff 0a 81 03 8d 7d da 82 a8 06 43 6c 50
+ff 0a 81 05 57 46 b1 85 91 a9 5d 48 41
+ff 0a 81 05 bd 09 72 ff 80 63 94 ee 2b
+ff 11 80 00 28 63 29 20 44 69 73 6e 65 79 20 32 30 31 33 b6
+ff 15 a3 26 00 01 00 8c 99 8d fb 11 95 3e bb 1e c2 a2 15 cc 39 f6 1e da
+ff 15 a3 42 00 02 00 b2 74 1b 15 5f 58 9e 1b ed 41 ff d8 e5 93 c6 38 3c
