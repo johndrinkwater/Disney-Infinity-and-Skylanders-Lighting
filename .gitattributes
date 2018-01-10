@@ -1,0 +1,6 @@
+# Linguist overrides
+
+resources/ linguist-vendored
+
+*.cpp linguist-language=C++
+*.h linguist-language=C++
