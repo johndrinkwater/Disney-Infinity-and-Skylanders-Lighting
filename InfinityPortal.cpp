@@ -150,12 +150,13 @@ void InfinityPortal::sendPreparedPacket(uint8_t* packet) {
 void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 
 	bool printUnknown = false;
+	uint8_t messageLength = packet[1];
 
 /*	printf("DBG  ");
 	if (packet[0x00] == 0xaa) {
 		printf("%02X ", messageReply[ packet[ 0x02 ] ] );
 	}
-	for(int i = 0 ; i < 32 ; i++) {
+	for(int i = 0 ; i < messageLength+3 ; i++) {
 		printf("%02X ",packet[i]);
 	}
 	printf("\n");*/
@@ -167,7 +168,6 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 	// [3]  data
 	// [size] checksum
 
-	uint8_t messageLength = packet[1];
 
 	if (packet[0x00] == 0xab) {
 
@@ -197,7 +197,8 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 		if ( msgType == 0x80 ) {
 
 			printf("BOOT \n");
-			snprintf(deviceSerial, 13, "%02X%02X%02X%02X%02X%02X",packet[19], packet[20], packet[21], packet[22], packet[15], packet[16]);
+			snprintf(deviceSerial, 13, "%02X%02X%02X%02X%02X%02X",
+				packet[19], packet[20], packet[21], packet[22], packet[15], packet[16]);
 		} else if ( msgType == 0xa1 ) {
 
 			printf("DISC LS ");
@@ -263,7 +264,7 @@ uint16_t InfinityPortal::receivePackets() {
 	uint16_t packetsReceived;
 	int retVal = 0;
 	int len = 0;
-	uint8_t* packet = new uint8_t[32];
+	uint8_t* packet = new uint8_t[32]();
 
 	while(retVal == 0) {
 
@@ -360,8 +361,7 @@ void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t 
 
 void InfinityPortal::fadeRandomColours(uint8_t platform, uint8_t pulseDuration, uint8_t iterations) {
 
-	uint8_t* packet = new uint8_t[32];
-	memset( packet, 0, sizeof( packet ) );
+	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x05; // length
 	packet[2] = 0x94; // command
