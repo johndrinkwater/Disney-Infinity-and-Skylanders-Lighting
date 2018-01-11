@@ -28,6 +28,9 @@ public:
 
 	/* inbuilt commands to do diff behaviours */
 	void setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b);
+	void setColours(bool setPlayset, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
+					bool setPlayer1, uint8_t player1R, uint8_t player1G, uint8_t player1B,
+					bool setPlayer2, uint8_t player2R, uint8_t player2G, uint8_t player2B);
 	void whatColour(uint8_t platform);
 
 	void sineWave(uint8_t platform, uint8_t animationDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b);
