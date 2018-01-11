@@ -34,6 +34,10 @@ public:
 	void whatColour(uint8_t platform);
 
 	void sineWave(uint8_t platform, uint8_t animationDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b);
+	void sineWaves(bool setPlayset, uint8_t playsetDuration, uint8_t playsetI, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
+					bool setPlayer1, uint8_t player1Duration, uint8_t player1I, uint8_t player1R, uint8_t player1G, uint8_t player1B,
+					bool setPlayer2, uint8_t player2Duration, uint8_t player2I, uint8_t player2R, uint8_t player2G, uint8_t player2B);
+
 	void pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t troughDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b);
 	void fadeRandomColours(uint8_t platform, uint8_t pulseDuration, uint8_t iterations);
 

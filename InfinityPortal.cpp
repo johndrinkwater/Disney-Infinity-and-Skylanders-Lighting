@@ -361,6 +361,39 @@ void InfinityPortal::sineWave(uint8_t platform, uint8_t animationDuration, uint8
 	sendPacket(packet);
 }
 
+void InfinityPortal::sineWaves(bool setPlayset, uint8_t playsetDuration, uint8_t playsetI, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
+				bool setPlayer1, uint8_t player1Duration, uint8_t player1I, uint8_t player1R, uint8_t player1G, uint8_t player1B,
+				bool setPlayer2, uint8_t player2Duration, uint8_t player2I, uint8_t player2R, uint8_t player2G, uint8_t player2B) {
+
+	uint8_t* packet = new uint8_t[32]();
+
+	packet[1] = 0x14; // length
+	packet[2] = 0x96; // command
+
+	packet[4] = setPlayset;
+	packet[5] = playsetDuration;
+	packet[6] = playsetI;
+	packet[7] = playsetR;
+	packet[8] = playsetG;
+	packet[9] = playsetB;
+
+	packet[10] = setPlayer1;
+	packet[11] = player1Duration;
+	packet[12] = player1I;
+	packet[13] = player1R;
+	packet[14] = player1G;
+	packet[15] = player1B;
+
+	packet[16] = setPlayer2;
+	packet[17] = player2Duration;
+	packet[18] = player2I;
+	packet[19] = player2R;
+	packet[20] = player2G;
+	packet[21] = player2B;
+
+	sendPacket(packet);
+}
+
 void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	pulseWave(platform, 0x02, 0x02, 0x06, r, g, b);
