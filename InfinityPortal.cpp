@@ -399,7 +399,8 @@ void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t
 	pulseWave(platform, 0x02, 0x02, 0x06, r, g, b);
 }
 
-void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t troughDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b) {
+void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t troughDuration, uint8_t iterations,
+								uint8_t r, uint8_t g, uint8_t b) {
 
 	uint8_t* packet = new uint8_t[32]();
 
@@ -413,6 +414,45 @@ void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t 
 	packet[8] = r;
 	packet[9] = g;
 	packet[10] = b;
+
+	sendPacket(packet);
+}
+
+void InfinityPortal::pulseWaves(bool setPlayset, uint8_t playsetCrest, uint8_t playsetTrough, uint8_t playsetI,
+									uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
+								bool setPlayer1, uint8_t player1Crest, uint8_t player1Trough, uint8_t player1I,
+									uint8_t player1R, uint8_t player1G, uint8_t player1B,
+								bool setPlayer2, uint8_t player2Crest, uint8_t player2Trough, uint8_t player2I,
+									uint8_t player2R, uint8_t player2G, uint8_t player2B) {
+
+	uint8_t* packet = new uint8_t[32]();
+
+	packet[1] = 0x17; // length
+	packet[2] = 0x97; // command
+
+	packet[4] = setPlayset;
+	packet[5] = playsetCrest;
+	packet[6] = playsetTrough;
+	packet[7] = playsetI;
+	packet[8] = playsetR;
+	packet[9] = playsetG;
+	packet[10] = playsetB;
+
+	packet[11] = setPlayer1;
+	packet[12] = player1Crest;
+	packet[13] = player1Trough;
+	packet[14] = player1I;
+	packet[15] = player1R;
+	packet[16] = player1G;
+	packet[17] = player1B;
+
+	packet[18] = setPlayer2;
+	packet[19] = player2Crest;
+	packet[20] = player2Trough;
+	packet[21] = player2I;
+	packet[22] = player2R;
+	packet[23] = player2G;
+	packet[24] = player2B;
 
 	sendPacket(packet);
 }
