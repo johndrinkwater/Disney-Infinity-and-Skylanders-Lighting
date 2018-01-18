@@ -12,7 +12,7 @@
 #include <math.h>
 #include "libusb-1.0/libusb.h"
 #include <unistd.h>
-#include "InfinityPortal.h"
+#include "InfinityBase.h"
 #include "SkylandersPortal.h"
 
 using namespace std;
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	InfinityPortal infinityPortals[infinityPortalCount];
+	InfinityBase infinityPortals[infinityPortalCount];
 	SkylandersPortal skylanderPortals[skylanderPortalCount];	
 
 	int j;
@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 	int lightsCount = 0;
 
 	for(j = 0 ; j < infinityPortalCount ; j++) {
-		infinityPortals[j] = InfinityPortal(infinityPortalIds[j]);
+		infinityPortals[j] = InfinityBase(infinityPortalIds[j]);
 		lightsCount += 3;
 	}
 

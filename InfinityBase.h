@@ -1,5 +1,5 @@
-#ifndef INFINITYPORTAL_H
-#define	INFINITYPORTAL_H
+#ifndef INFINITYBASE_H
+#define	INFINITYBASE_H
 
 #include <stdio.h>
 #include "libusb-1.0/libusb.h"
@@ -12,11 +12,11 @@
 #include <math.h>
 #include <unistd.h>
 
-class InfinityPortal {
+class InfinityBase {
 public:
-	InfinityPortal();
-	InfinityPortal(int deviceId);
-	virtual ~InfinityPortal();
+	InfinityBase();
+	InfinityBase(int deviceId);
+	virtual ~InfinityBase();
 	libusb_device_handle* deviceHandler;
 	char *deviceSerial;
 	uint8_t messageId;

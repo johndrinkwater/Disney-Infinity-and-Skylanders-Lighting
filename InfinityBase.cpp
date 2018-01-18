@@ -1,14 +1,14 @@
-#include "InfinityPortal.h"
+#include "InfinityBase.h"
 
-InfinityPortal::InfinityPortal() {
-
-}
-
-InfinityPortal::~InfinityPortal() {
+InfinityBase::InfinityBase() {
 
 }
 
-InfinityPortal::InfinityPortal(int deviceId) {
+InfinityBase::~InfinityBase() {
+
+}
+
+InfinityBase::InfinityBase(int deviceId) {
 
 	// printf("Device id: %d\n",deviceId);
 	deviceHandler = connect(deviceId);
@@ -37,7 +37,7 @@ InfinityPortal::InfinityPortal(int deviceId) {
 	activate();
 }
 
-libusb_device_handle* InfinityPortal::connect(int deviceId) {
+libusb_device_handle* InfinityBase::connect(int deviceId) {
 
 	libusb_device** devices;
 	libusb_context* context;
@@ -60,7 +60,7 @@ libusb_device_handle* InfinityPortal::connect(int deviceId) {
 	}
 }
 
-void InfinityPortal::activate() {
+void InfinityBase::activate() {
 
 	uint8_t packet[] = {0,0,0,0,0x28,0x63,0x29,0x20,0x44,0x69,0x73,0x6e,0x65,0x79,0x20,0x32,0x30,0x31,0x33};
 	packet[1] = 0x11; // length
@@ -69,7 +69,7 @@ void InfinityPortal::activate() {
 	sendPacket(packet);
 }
 
-void InfinityPortal::listDiscs() {
+void InfinityBase::listDiscs() {
 
 	uint8_t* packet = new uint8_t[32]();
 
@@ -79,7 +79,7 @@ void InfinityPortal::listDiscs() {
 	sendPacket(packet);
 }
 
-void InfinityPortal::getDiscId(uint8_t disc) {
+void InfinityBase::getDiscId(uint8_t disc) {
 
 	// As discs are placed on the base, we receive a message to say which platform, and what № they are
 	// this disc number is assigned by the base, picking the first unused number upwards from 0
@@ -96,13 +96,13 @@ void InfinityPortal::getDiscId(uint8_t disc) {
 	sendPacket(packet);
 }
 
-uint8_t InfinityPortal::nextMessage() {
+uint8_t InfinityBase::nextMessage() {
 
     messageId = (messageId + 1) ^ 256;
 	return messageId;
 }
 
-void InfinityPortal::sendPacket(uint8_t* packet) {
+void InfinityBase::sendPacket(uint8_t* packet) {
 
 	// All commands are prefixed with
 	packet[0] = 0xFF;
@@ -127,7 +127,7 @@ void InfinityPortal::sendPacket(uint8_t* packet) {
 	sendPreparedPacket( packet );
 }
 
-void InfinityPortal::sendPreparedPacket(uint8_t* packet) {
+void InfinityBase::sendPreparedPacket(uint8_t* packet) {
 
 	int len;
 	int retVal = -1;
@@ -147,7 +147,7 @@ void InfinityPortal::sendPreparedPacket(uint8_t* packet) {
 
 }
 
-void InfinityPortal::processReceivedPacket(uint8_t* packet) {
+void InfinityBase::processReceivedPacket(uint8_t* packet) {
 
 	bool printUnknown = false;
 	uint8_t messageLength = packet[1];
@@ -259,7 +259,7 @@ void InfinityPortal::processReceivedPacket(uint8_t* packet) {
 	}
 }
 
-uint16_t InfinityPortal::receivePackets() {
+uint16_t InfinityBase::receivePackets() {
 
 	uint16_t packetsReceived;
 	int retVal = 0;
@@ -279,7 +279,7 @@ uint16_t InfinityPortal::receivePackets() {
 }
 
 
-void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
+void InfinityBase::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	uint8_t* packet = new uint8_t[32]();
 
@@ -294,7 +294,7 @@ void InfinityPortal::setColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b
 	sendPacket(packet);
 }
 
-void InfinityPortal::setColours(bool setPlayset, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
+void InfinityBase::setColours(bool setPlayset, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
 								bool setPlayer1, uint8_t player1R, uint8_t player1G, uint8_t player1B,
 								bool setPlayer2, uint8_t player2R, uint8_t player2G, uint8_t player2B) {
 
@@ -319,7 +319,7 @@ void InfinityPortal::setColours(bool setPlayset, uint8_t playsetR, uint8_t plays
 	sendPacket(packet);
 }
 
-void InfinityPortal::whatColour(uint8_t platform) {
+void InfinityBase::whatColour(uint8_t platform) {
 
 	uint8_t* packet = new uint8_t[32]();
 
@@ -336,13 +336,13 @@ void InfinityPortal::whatColour(uint8_t platform) {
 	sendPacket(packet);
 }
 
-
-void InfinityPortal::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
+void InfinityBase::fadeColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	sineWave(platform, 0x10, 0x02, r, g, b);
 }
 
-void InfinityPortal::sineWave(uint8_t platform, uint8_t animationDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b) {
+void InfinityBase::sineWave(uint8_t platform, uint8_t animationDuration, uint8_t iterations, uint8_t r, uint8_t g, uint8_t b) {
+
 	uint8_t* packet = new uint8_t[32]();
 
 	packet[1] = 0x08; // length
@@ -361,7 +361,7 @@ void InfinityPortal::sineWave(uint8_t platform, uint8_t animationDuration, uint8
 	sendPacket(packet);
 }
 
-void InfinityPortal::sineWaves(bool setPlayset, uint8_t playsetDuration, uint8_t playsetI, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
+void InfinityBase::sineWaves(bool setPlayset, uint8_t playsetDuration, uint8_t playsetI, uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
 				bool setPlayer1, uint8_t player1Duration, uint8_t player1I, uint8_t player1R, uint8_t player1G, uint8_t player1B,
 				bool setPlayer2, uint8_t player2Duration, uint8_t player2I, uint8_t player2R, uint8_t player2G, uint8_t player2B) {
 
@@ -394,12 +394,12 @@ void InfinityPortal::sineWaves(bool setPlayset, uint8_t playsetDuration, uint8_t
 	sendPacket(packet);
 }
 
-void InfinityPortal::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
+void InfinityBase::flashColour(uint8_t platform, uint8_t r, uint8_t g, uint8_t b) {
 
 	pulseWave(platform, 0x02, 0x02, 0x06, r, g, b);
 }
 
-void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t troughDuration, uint8_t iterations,
+void InfinityBase::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t troughDuration, uint8_t iterations,
 								uint8_t r, uint8_t g, uint8_t b) {
 
 	uint8_t* packet = new uint8_t[32]();
@@ -418,7 +418,7 @@ void InfinityPortal::pulseWave(uint8_t platform, uint8_t crestDuration, uint8_t 
 	sendPacket(packet);
 }
 
-void InfinityPortal::pulseWaves(bool setPlayset, uint8_t playsetCrest, uint8_t playsetTrough, uint8_t playsetI,
+void InfinityBase::pulseWaves(bool setPlayset, uint8_t playsetCrest, uint8_t playsetTrough, uint8_t playsetI,
 									uint8_t playsetR, uint8_t playsetG, uint8_t playsetB,
 								bool setPlayer1, uint8_t player1Crest, uint8_t player1Trough, uint8_t player1I,
 									uint8_t player1R, uint8_t player1G, uint8_t player1B,
@@ -457,7 +457,7 @@ void InfinityPortal::pulseWaves(bool setPlayset, uint8_t playsetCrest, uint8_t p
 	sendPacket(packet);
 }
 
-void InfinityPortal::fadeRandomColours(uint8_t platform, uint8_t pulseDuration, uint8_t iterations) {
+void InfinityBase::fadeRandomColours(uint8_t platform, uint8_t pulseDuration, uint8_t iterations) {
 
 	uint8_t* packet = new uint8_t[32]();
 

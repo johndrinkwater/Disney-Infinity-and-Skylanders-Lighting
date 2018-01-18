@@ -12,7 +12,7 @@
 #include <math.h>
 #include "libusb-1.0/libusb.h"
 #include <unistd.h>
-#include "InfinityPortal.h"
+#include "InfinityBase.h"
 #include "SkylandersPortal.h"
 
 using namespace std;
@@ -36,9 +36,9 @@ int main(int argc, char** argv) {
 
 	int retVal = 0;
 	int skylanderPortalIds[0xff];
-	int infinityPortalIds[0xff];
+	int infinityBaseIds[0xff];
 	int skylanderPortalCount = 0;
-	int infinityPortalCount = 0;
+	int infinityBaseCount = 0;
 
 	for(int i = 0 ; i < devicesCount ; i++) {
 
@@ -54,8 +54,8 @@ int main(int argc, char** argv) {
 
 					printf("Found infinity portal at %d\n",i);
 
-					infinityPortalIds[infinityPortalCount] = i;
-					infinityPortalCount++;
+					infinityBaseIds[infinityBaseCount] = i;
+					infinityBaseCount++;
 
 			} else if(descriptor.idVendor == 0x1430 && descriptor.idProduct == 0x150) {
 
@@ -66,18 +66,18 @@ int main(int argc, char** argv) {
 			}
 	}
 
-	if(skylanderPortalCount == 0 && infinityPortalCount == 0) {
+	if(skylanderPortalCount == 0 && infinityBaseCount == 0) {
 		printf("Please plug in either a Portal of Power or an Infinity Base\n");
 		return -1;
 	}
 
-	InfinityPortal infinityPortals[infinityPortalCount];
-	SkylandersPortal skylanderPortals[skylanderPortalCount];	
+	InfinityBase infinityBases[infinityBaseCount];
+	SkylandersPortal skylanderPortals[skylanderPortalCount];
 
 	int j;
 
-	for(j = 0 ; j < infinityPortalCount ; j++) {
-		infinityPortals[j] = InfinityPortal(infinityPortalIds[j]);
+	for(j = 0 ; j < infinityBaseCount ; j++) {
+		infinityBases[j] = InfinityBase(infinityBaseIds[j]);
 	}
 
 	for(j = 0 ; j < skylanderPortalCount ; j++) {
@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 
 	while(true) {
 
-		for(j = 0 ; j < max(skylanderPortalCount,infinityPortalCount) ; j++) {
+		for(j = 0 ; j < max(skylanderPortalCount,infinityBaseCount) ; j++) {
 
 			if(j < skylanderPortalCount) {
 				// printf("Doing %d\n",j);
@@ -100,9 +100,9 @@ int main(int argc, char** argv) {
 				return 0;
 			}
 
-			if(j < infinityPortalCount) {
+			if(j < infinityBaseCount) {
 				for(int k = 0 ; k < 3 ; k++) {
-					infinityPortals[j].setColour(k+1,random()%0x100,random()%0x100,random()%0x100);
+					infinityBases[j].setColour(k+1,random()%0x100,random()%0x100,random()%0x100);
 				}
 			}
 		}
